@@ -25,9 +25,9 @@ const std::string COURSES_NOT_OFFERED_PATH = "student_output/courses_not_offered
  * Hint: Remember what types C++ streams work with?!
  */
 struct Course {
-  /* STUDENT TODO */ title;
-  /* STUDENT TODO */ number_of_units;
-  /* STUDENT TODO */ quarter;
+  std::string title;
+  std::string number_of_units;
+  std::string quarter;
 };
 
 /**
@@ -58,9 +58,30 @@ struct Course {
  * @param filename The name of the file to parse.
  * @param courses  A vector of courses to populate.
  */
-void parse_csv(std::string filename, std::vector<Course> courses) {
-  /* (STUDENT TODO) Your code goes here... */
+void parse_csv(std::string filename, std::vector<Course>& courses) {
+  std::ifstream file(filename); // Me permite leer línea por línea
+
+  if (!file.is_open()) {         // Compruebo si realmente se abre el archivo
+    std::cerr << "File not found" << std::endl;
+    return;
+  }
+
+  std::string line;
+  std::getline(file, line); // Lee e ignora la primera línea (header), ya que solo contiene el nombre de las columnas
+  while (std::getline(file, line)) {  // Leer línea por línea
+    std::vector<std::string> tokens = split(line, ',');   // Convierto cada línea en un stream
+
+    // This extracts the necessary course information from the tokens (a vector of strings from split())
+    std::string title = tokens[0]; // Extracts course title from the parsed line.
+    std::string number_of_units = tokens[1]; // Extracts course Units from the parsed line
+    std::string quarter = tokens[2]; // Extracts the quarter information.
+
+    // Creates and stores a Course object in courses.
+    courses.push_back({title, number_of_units, quarter});
+  }
+  file.close();
 }
+
 
 /**
  * This function has TWO requirements.
@@ -80,8 +101,48 @@ void parse_csv(std::string filename, std::vector<Course> courses) {
  * @param all_courses A vector of all courses gotten by calling `parse_csv`.
  *                    This vector will be modified by removing all offered courses.
  */
-void write_courses_offered(std::vector<Course> all_courses) {
-  /* (STUDENT TODO) Your code goes here... */
+
+void write_courses_offered(std::vector<Course>& all_courses) {
+  std::ofstream file(COURSES_OFFERED_PATH);
+
+  if (!file.is_open()) {
+    std::cerr << "Unable to open file for writing!" << std::endl;
+    return;
+  }
+
+  // Escribir el header del CSV
+  file << "Title,Number of Units,Quarter\n";
+
+  // Para guardar los cursos no ofrecidos
+  std::vector<Course> filtered_courses;
+
+  // Itera sobre todos los cursos y escribe los ofrecidos
+  for (const Course& course : all_courses) {
+    if (course.quarter != "null") { // Filter courses that are offered
+      file << course.title << "," << course.number_of_units << "," << course.quarter << "\n";
+    }
+    else { // Not-offered course, Keep in filtered_courses
+      filtered_courses.push_back(course); // Si no está ofertado, lo conservamos
+    }
+  }
+  file.close();
+
+  // Replace all_courses with the filtered list (los cursos no ofertados)
+  all_courses = std::move(filtered_courses);
+
+  /*
+  // Ahora, eliminamos del vector todos los cursos ofertados usando delete_elem_from_vector.
+  // Debido a que no es seguro eliminar elementos mientras iteramos, usamos un bucle while
+  // que busque y elimine cursos ofertados uno a uno.
+  bool foundOffered = true;
+  while (foundOffered) {
+    foundOffered = false;
+    for (const Course& course : all_courses) {
+      if (course.quarter != "null") {  // Encontramos un curso ofertado
+        delete_elem_from_vector(all_courses, course);
+        foundOffered = true;
+        break;  // Rompemos el bucle para reiniciar la búsqueda en el vector modificado
+  */
 }
 
 /**
@@ -97,13 +158,25 @@ void write_courses_offered(std::vector<Course> all_courses) {
  *
  * @param unlisted_courses A vector of courses that are not offered.
  */
-void write_courses_not_offered(std::vector<Course> unlisted_courses) {
-  /* (STUDENT TODO) Your code goes here... */
+void write_courses_not_offered(std::vector<Course>& unlisted_courses) {
+  std::ofstream file(COURSES_NOT_OFFERED_PATH);
+
+  if (!file.is_open()) {
+    std::cerr << "Unable to open file for writing!" << std::endl;
+    return;
+  }
+
+  // Escribir header del CSV
+  file << "Title,Number of Units,Quarter\n";
+
+  for (const Course& course : unlisted_courses) {
+    file << course.title << "," << course.number_of_units << "," << course.quarter << "\n";
+  }
+  file.close();
 }
 
-int main() {
-  /* Makes sure you defined your Course struct correctly! */
-  static_assert(is_valid_course<Course>, "Course struct is not correctly defined!");
+int main(void) {
+  static_assert(is_valid_course<Course>, "Course struct is not correctly defined!"); // Si is_valid_course<Course> es falsa, la compilación fallará y se mostrará el mensaje
 
   std::vector<Course> courses;
   parse_csv("courses.csv", courses);

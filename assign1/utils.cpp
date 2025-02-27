@@ -21,14 +21,17 @@ std::ostream& operator<<(std::ostream& os, const Course& course);
  * @returns     A vector of the split strings.
  */
 std::vector<std::string> split(const std::string& s, char delim) {
-  std::vector<std::string> return_vec;
-  std::stringstream ss(s);
+  std::vector<std::string> return_vec;  // Vector to store the split parts
+  std::stringstream ss(s);  // Convert the string into a stream
   std::string token;
-  while (std::getline(ss, token, delim)) {
-    return_vec.push_back(token);
+
+  while (std::getline(ss, token, delim)) {  // Read each part separated by delim
+    return_vec.push_back(token);  // Store each part in the vector
   }
-  return return_vec;
+
+  return return_vec;  // Return the vector with all split parts
 }
+
 
 /**
  * Deletes a Course from a vector of courses.
