@@ -131,7 +131,7 @@ void write_courses_offered(std::vector<Course>& all_courses) {
   all_courses = std::move(filtered_courses);
 
   /*
-  // Ahora, eliminamos del vector todos los cursos ofertados usando delete_elem_from_vector.
+  ce// Ahora, eliminamos del vector todos los cursos ofertados usando delete_elem_from_vector.
   // Debido a que no es seguro eliminar elementos mientras iteramos, usamos un bucle while
   // que busque y elimine cursos ofertados uno a uno.
   bool foundOffered = true;
