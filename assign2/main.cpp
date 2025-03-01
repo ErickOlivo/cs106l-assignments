@@ -1,4 +1,4 @@
-/*
+de /*
  * CS106L Assignment 2: Marriage Pact
  * Created by Haven Whitney with modifications by Fabio Ibanez & Jacob Roberts-Baca.
  *
@@ -14,7 +14,7 @@
 #include <string>
 #include <unordered_set>
 
-std::string kYourName = "STUDENT TODO"; // Don't forget to change this!
+std::string kYourName = "Erick Olivo"; // Don't forget to change this!
 
 /**
  * Takes in a file name and returns a set containing all of the applicant names as a set.
@@ -29,6 +29,11 @@ std::string kYourName = "STUDENT TODO"; // Don't forget to change this!
  */
 std::set<std::string> get_applicants(std::string filename) {
   // STUDENT TODO: Implement this function.
+  std::ofstream file(filename)
+  if (!file.isopen()) {
+    std::cerr << "Unable to open this file" << std::endl;
+    return;
+  }
 }
 
 /**
