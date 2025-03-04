@@ -75,6 +75,10 @@ Additionally, please answer the following short answer question in `short_answer
 >
 > **Q1:** It is your choice to use either an ordered or unordered set. In a few sentences, what are some of the tradeoffs between the two? Additionally, please give an example (that has not been shown in lecture) of a valid hash function that could be used to hash student names for an unordered set.
 
+std::set is implemented as a balanced binary search tree, which provides O(log n) time complexity for insertions, deletions, and lookups. It has a lower memory overhead but requires additional pointers for maintaning the tree structure.
+
+std::unordered_set is implemented as a hash table, offering O(1) average case for insertions, deletions, and lookups but O(n) worst case due to hash collisions. It generally uses more memory because it maintains a hash table with extra space for handling collisions.
+
 > [!NOTE]
 > All names appearing in this assignment are fictitious. Any resemblance to real persons, living or dead, is purely coincidental.
 
@@ -111,6 +115,10 @@ Afterwards, answer the following question in `short_answer.txt`:
 > ### `short_answer.txt`
 >
 > **Q2:** Note that we are saving pointers to names in the queue, not names themselves. Why might this be desired in this problem? What happens if the original set where the names are stored goes out of scope and the pointers are referenced?
+
+If we store full std::string objects in the std::queue, each name would be copied into the queue, leading to unnecessary duplication.
+
+
 
 ## 🚀 Submission Instructions
 
