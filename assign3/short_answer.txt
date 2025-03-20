@@ -5,7 +5,7 @@ Make a Class
 ------------
 
 Q1. What’s const-correctness and why is it important?
-A1. TODO
+A1. Const-correctness helps ensure that variables and objects that are not meant to be modified remain unchanged. By using the const keyword, we can indicate that a variable or a member function should not alter the state of a object. This prevents accidental modifications.
 
 Q2. Is your class const-correct? How do you know?
-A2. TODO
+A2. Yes, I know because a member function did not modify the state of the object.
