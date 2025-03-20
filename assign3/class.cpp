@@ -1,47 +1,49 @@
 #include "class.h"
 #include <string>
+#include <iostream>
 
-int main void() {
-    // Default constructor
-    Coche::Coche() {
-        marca = "Desconocida";
-        modelo = "Desconocido";
-    }
 
-    // Custom consturctor
-    Coche::Coche(std::string marca, std::string modelo) {
-        this->marca = marca;
-        this->modelo = modelo;
-    }
+// Default constructor
+Coche::Coche() {
+    marca = "Desconocida";
+    modelo = "Desconocido";
+    velocidad = 0;  // Inicializamos la velocidad
+}
 
-    // Getter function
-    std::string Coche::getMarca() const {
-        return marca;
-    }
+// Custom constructor (los parámetros ahora se reciben como const reference)
+Coche::Coche(const std::string &marca, const std::string &modelo, int velocidad) {
+    this->marca = marca;
+    this->modelo = modelo;
+    this->velocidad = velocidad;
+}
 
-    std::string Coche::getModelo() const {
-        return modelo;
-    }
+// Getter functions
+std::string Coche::getMarca() const {
+    return marca;
+}
 
-    int getVelocidad() const {
-        return velocidad;
-    }
+std::string Coche::getModelo() const {
+    return modelo;
+}
 
-    // Setter function
-    void setMarca(std::string marca) {
-        marca = marca;
-    }
-    void setModelo(std::string modelo) {
-        modelo = modelo;
-    }
-    void setVelocidad(int velocidad) {
-        velocidad = velocidad;
-    }
+int Coche::getVelocidad() const {
+    return velocidad;
+}
 
-    // Private member function (Solo puede ser llamada desde dentro de la clase)
-    void Coche::Acelerar() {
-        velocidad += 10;
-    }
+// Setter functions (ahora usando const reference)
+void Coche::setMarca(const std::string &marca) {
+    this->marca = marca;
+}
 
-    return 0;
+void Coche::setModelo(const std::string &modelo) {
+    this->modelo = modelo;
+}
+
+void Coche::setVelocidad(int velocidad) {
+    this->velocidad = velocidad;
+}
+
+// Private member function (nota: el nombre debe coincidir exactamente con el declarado en el header)
+void Coche::acelerar() {
+    velocidad += 10;
 }
