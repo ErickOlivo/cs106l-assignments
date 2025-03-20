@@ -13,7 +13,8 @@ private: // 3. Private member fields
 
 public:
     // 1. Custom constructor
-    Coche(std::string marca, std::string modelo, int velocidad);
+    Coche(const std::string &marca, const std::string &modelo, int velocidad);
+
     // 2. Default (parameterless) constructor (i.e. constructor overloading)
     Coche();
 
@@ -23,9 +24,8 @@ public:
     int getVelocidad() const;
 
     // 6. Public setter function
-    void setMarca(std::string marca);
-    void setModelo(std::string modelo);
-
+    void setMarca(const std::string &marca);
+    void setModelo(const std::string &modelo);
     void setVelocidad(int velocidad);
 
 };
