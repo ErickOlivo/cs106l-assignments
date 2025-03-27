@@ -41,18 +41,34 @@ std::set<Mispelling> spellcheck(const Corpus& source, const Dictionary& dictiona
   /* TODO: Implement this method */
   namespace rv = std::ranges::views;
 
-  // Paso 1: filtrar solo los tokens que no están en el diccionario
+  // Paso 1: tokens mal escritos
   auto misspelled_view = source
       | rv::filter([&dictionary](const Token& token) {
           return !dictionary.contains(token.content);
       });
 
-  // (Temporal) Imprimir cuántos tokens mal escritos encontramos
-  std::cout << "Misspelled tokens: "
-            << std::ranges::distance(misspelled_view.begin(), misspelled_view.end())
-            << std::endl;
+  // Paso 2: transformar en Mispelling
+  auto mispellings_view = misspelled_view
+      | rv::transform([&dictionary](const Token& token) {
+          auto suggestions_view = dictionary
+              | rv::filter([&token](const std::string& word) {
+                  return levenshtein(token.content, word) == 1;
+              });
 
-  return std::set<Mispelling>();
+          std::set<std::string> suggestions(suggestions_view.begin(), suggestions_view.end());
+
+          return Mispelling{token, suggestions};
+      });
+
+    // Paso 3: eliminar Mispellings sin sugerencias
+
+      auto non_empty_mispellings = mispellings_view
+      | rv::filter([](const Mispelling& m) {
+          return !m.suggestions.empty();
+      });
+
+  return std::set<Mispelling>(non_empty_mispellings.begin(), non_empty_mispellings.end());
+
 
 };
 
