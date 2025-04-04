@@ -55,7 +55,7 @@ As you are following the instructions below, we recommend intermittently compili
 
 ## Part 1: Viewing Profiles
 
-Take a look at the `user.h` header file. Your coworkers have begun to write a `User` class that will store the name and friends list of each user who joins your social media platform! In order to keep this class super efficient, they have chosen to represent the list of friends as a raw pointer array of `std::string` (kind of like how a `std::vector` stores its elements behind the scenes). Thankfully, they have already written logic for creating a new `User` and for adding friends to an existing `User`'s friend list (`add_friend`), but they've begun to experience some strange issues when working with `User` objects.    
+Take a look at the `user.h` header file. Your coworkers have begun to write a `User` class that will store the name and friends list of each user who joins your social media platform! In order to keep this class super efficient, they have chosen to represent the list of friends as a raw pointer array of `std::string` (kind of like how a `std::vector` stores its elements behind the scenes). Thankfully, they have already written logic for creating a new `User` and for adding friends to an existing `User`'s friend list (`add_friend`), but they've begun to experience some strange issues when working with `User` objects.
 
 To begin with, there's no easy way to print information about each `User` object to the console, which has made debugging at Treebook difficult. To help your coworkers out, write an `operator<<` method that prints a `User` to a `std::ostream`. **This operator should be declared as a friend function in `user.h` and implemented in `user.cpp`.** For example, a user named `"Alice"` with friends `"Bob"` and `"Charlie"` should give the following output when printed to the console:
 
@@ -65,7 +65,7 @@ User(name=Alice, friends=[Bob, Charlie])
 
 Note: `operator<<` should not print any newline characters.
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > In your implementation of `operator<<`, you will need to access and loop through the `_friends` private field of the `User` class in order to print out a user's friends. Normally, you cannot access private fields inside of a class in a non-member function—in this case, we can get around this restriction by marking `operator<<` as a **friend function inside of the `User` class.** See the slides for Tuesday's lecture for more information!
 
 ## Part 2: Unfriendly Behaviour
@@ -77,18 +77,18 @@ To be specific, you will need to:
 1. Implement a destructor for the `User` class. To do so, implement the `User::~User()` SMF.
 2. Make the `User` class copy constructible. To do so, implement the `User::User(const User& user)` SMF.
 3. Make the `User` class copy assignable. To do so, implement the `User& User::operator=(const User& user)` SMF.
-4. Prevent the `User` class from being move constructed. To do so, delete the `User::User(User&& user)` SMF. 
+4. Prevent the `User` class from being move constructed. To do so, delete the `User::User(User&& user)` SMF.
 5. Prevent the `User` class from being move assigned. To do so, delete the `User& User::operator=(User&& user)` SMF.
 
 In performing these tasks, you are expected to make changes to **both** the `user.h` and `user.cpp` files.
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > In your implementations of points 2 and 3 above, you will need to copy the contents of the `_friends` array. Recall from Thursday's lecture on special member functions that you can copy a pointer array by first allocating memory for a new one (possibly within a member initializer list), and then copying over the elements with a for loop.
 > Make sure that you also set the `_size`, `_capacity`, and `_name` of the instance you are changing as well!
 
 ## Part 3: Always Be Friending
 
-After making changes to the special member functions, you've been able to scale out Treebook across Stanford and word has started to spread at other universities! However, your coworkers and you have found that some common use cases for the `User` class are either inconvenient or impossible given how the class is currently written, and you think you might be able to fix this by implementing some custom operators. 
+After making changes to the special member functions, you've been able to scale out Treebook across Stanford and word has started to spread at other universities! However, your coworkers and you have found that some common use cases for the `User` class are either inconvenient or impossible given how the class is currently written, and you think you might be able to fix this by implementing some custom operators.
 
 You will overload two operators for the `User` class. **Please implement both of these operators as member functions** (i.e. declare them inside of the `User` class in `user.h` and provide implementations in `user.cpp`).
 
