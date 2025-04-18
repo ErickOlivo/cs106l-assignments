@@ -9,6 +9,10 @@
 #include <vector>
 
 /** STUDENT_TODO: You will need to include a relevant header file here! */
+#include <optional>
+#include <string>
+#include <iostream>
+
 
 #include "autograder/utils.hpp"
 
@@ -52,21 +56,24 @@ public:
    * @param course_title The title of the course to find.
    * @return You will need to figure this out!
    */
-  FillMeIn find_course(std::string course_title)
-  {
+  std::optional<Course> find_course(std::string course_title) {
     /* STUDENT_TODO: Implement this method! You will need to change the return
      * type. */
+    auto it = std::find_if(courses.begin(), courses.end(), [&](const Course& c) {
+      return c.title == course_title; });
+      if (it !=courses.end()) {
+        return *it;
+      }
+      return std::nullopt;
   }
 
 private:
   std::vector<Course> courses;
 };
 
-int
-main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
   static_assert(
-    !std::is_same_v<std::invoke_result_t<decltype (&CourseDatabase::find_course), 
+    !std::is_same_v<std::invoke_result_t<decltype (&CourseDatabase::find_course),
                       CourseDatabase, std::string>,
                     FillMeIn>,
     "You must change the return type of CourseDatabase::find_course to "
@@ -75,13 +82,18 @@ main(int argc, char* argv[])
   if (argc == 2) {
     CourseDatabase db("autograder/courses.csv");
     auto course = db.find_course(argv[1]);
-    
-    /******************************************************** 
+
+    /********************************************************
     STUDENT_TODO: Populate the output string with the right information to print
     Please pay special attention to the README here
     ********************************************************/
 
-    std::string output = /* STUDENT_TODO */
+    // Populate the output string using monadic operations on std::optional
+    std::string output = course
+      .transform([](const Course& c) {
+        return "Found course: " + c.title + "," + c.number_of_units + "," + c.quarter;
+      })
+      .value_or("Course not found.");
 
     /********************************************************
      DO NOT MODIFY ANYTHING BELOW THIS LINE PLEASE
@@ -90,6 +102,6 @@ main(int argc, char* argv[])
     std::cout << output << std::endl;
     return 0;
   }
-  
+
   return run_autograder();
 }
