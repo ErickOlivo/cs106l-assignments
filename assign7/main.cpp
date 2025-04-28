@@ -6,6 +6,7 @@
 #include <functional>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 #include <unordered_map>
 #include <vector>
 
@@ -52,7 +53,19 @@ template <typename T> struct ListNode {
  */
 template <typename T> cs106l::unique_ptr<ListNode<T>> create_list(const std::vector<T>& values) {
   /* STUDENT TODO: Implement this method */
-  throw std::runtime_error("Not implemented: createList");
+  cs106l::unique_ptr<ListNode<T>> head(nullptr);
+
+  // Build the list backwards so the final order matches values[]
+  for (int i = static_cast<int>(values.size()) - 1; i >= 0; --i) {
+    // 1) allocate a new node
+    cs106l::unique_ptr<ListNode<T>> node(new ListNode<T>(values[i]));
+    // 2) link node->next to the existing head (move ownership)
+    node->next = std::move(head);
+    // 3) update head to point to this new node
+    head = std::move(node);
+  }
+
+    return head;  // may be nullptr if values.empty()
 }
 
 /**
