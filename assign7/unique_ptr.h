@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <utility>
+#include <stdexcept> // for std::runtime_error
 
 namespace cs106l {
 
@@ -11,27 +12,30 @@ namespace cs106l {
  * @note This class is a simpler version of `std::unique_ptr`.
  */
 template <typename T> class unique_ptr {
+
 private:
   /* STUDENT TODO: What data must a unique_ptr keep track of? */
+  T* ptr_;
 
 public:
+
   /**
    * @brief Constructs a new `unique_ptr` from the given pointer.
    * @param ptr The pointer to manage.
    * @note You should avoid using this constructor directly and instead use `make_unique()`.
    */
-  unique_ptr(T* ptr) {
+
+  unique_ptr(T* ptr) noexcept
     /* STUDENT TODO: Implement the constructor */
-    throw std::runtime_error("Not implemented: unique_ptr(T* ptr)");
-  }
+    : ptr_(ptr) {}
 
   /**
    * @brief Constructs a new `unique_ptr` from `nullptr`.
    */
-  unique_ptr(std::nullptr_t) {
+  unique_ptr(std::nullptr_t) noexcept
     /* STUDENT TODO: Implement the nullptr constructor */
-    throw std::runtime_error("Not implemented: unique_ptr(std::nullptr_t)");
-  }
+    : ptr_(nullptr) {}
+  
 
   /**
    * @brief Constructs an empty `unique_ptr`.
@@ -45,7 +49,7 @@ public:
    */
   T& operator*() {
     /* STUDENT TODO: Implement the dereference operator */
-    throw std::runtime_error("Not implemented: operator*()");
+    return *ptr_;
   }
 
   /**
@@ -54,7 +58,7 @@ public:
    */
   const T& operator*() const {
     /* STUDENT TODO: Implement the dereference operator (const) */
-    throw std::runtime_error("Not implemented: operator*() const");
+    return *ptr_;
   }
 
   /**
@@ -64,7 +68,7 @@ public:
    */
   T* operator->() {
     /* STUDENT TODO: Implement the arrow operator */
-    throw std::runtime_error("Not implemented: operator->()");
+    return ptr_;
   }
 
   /**
@@ -74,7 +78,7 @@ public:
    */
   const T* operator->() const {
     /* STUDENT TODO: Implement the arrow operator */
-    throw std::runtime_error("Not implemented: operator->() const");
+    return ptr_;
   }
 
   /**
@@ -84,7 +88,7 @@ public:
    */
   operator bool() const {
     /* STUDENT TODO: Implement the boolean conversion operator */
-    throw std::runtime_error("Not implemented: operator bool() const");
+    return ptr_ !=nullptr;
   }
 
   /** STUDENT TODO: In the space below, do the following:
@@ -94,6 +98,29 @@ public:
    * - Implement the move constructor
    * - Implement the move assignment operator
    */
+  ~unique_ptr() {
+    // Destructor releases the owned object
+    delete ptr_;
+  }
+
+  // Disable copy semantics
+  unique_ptr(const unique_ptr&) = delete;
+  unique_ptr& operator=(const unique_ptr&) = delete;
+
+  // Enable move semantics
+  unique_ptr(unique_ptr&& other) noexcept
+    : ptr_(other.ptr_) {
+    other.ptr_ = nullptr;
+  }
+
+  unique_ptr& operator=(unique_ptr&& other) noexcept {
+    if (this != &other) {
+      delete ptr_;
+      ptr_ = other.ptr_;
+      other.ptr_ = nullptr;
+    }
+    return *this;
+  }
 };
 
 /**
@@ -103,7 +130,7 @@ public:
  * @tparam Args The types of the arguments to pass to the constructor of T.
  * @param args The arguments to pass to the constructor of T.
  */
-template <typename T, typename... Args> 
+template <typename T, typename... Args>
 unique_ptr<T> make_unique(Args&&... args) {
   return unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
